@@ -132,25 +132,25 @@ class tsunami:
         print('LOG: Initating the copy process.  Please wait, this could take a few minutes...')
         #Based on location variable find ip to use for client
         if location == 'SJC':
-            ip = 'pxe-sja.cisco.com'
+            ip = ''
             user = 'pxe'
             password = 'pxe'
         elif location == 'SJA':
-            ip = 'pxe-sja.cisco.com'
+            ip = ''
             user = 'pxe'
             password = 'pxe'
         elif location == 'BGL':
-            ip = 'pxe-bgl.cisco.com'
+            ip = ''
             user = 'pxe'
             password = 'pxe'
         elif location == 'AST':
-            ip = 'pxe-ast.cisco.com'
+            ip = ''
             user = 'pxe'
             password = 'pxe'
         #Start pxssh pexpect session and run tsunami client
         s = pxssh.pxssh(timeout=3000)
         s.login(ip, user, password)
-        s.sendline('cd /tftpboot/asa/scratch/kick')
+        s.sendline('cd /tftpboot/')
         s.sendline('tsunami')
         s.sendline('connect ' + self.docker + ' ' + port)
         s.sendline('set rate 128M')
@@ -176,31 +176,31 @@ def find_ful_caas():
                 Finds caas server with most resources.
     '''
     #First check CaaS1
-    dd_url = "tcp://kick-ful-caas1:2375"
+    dd_url = "tcp://:2375"
     dockerClient = Client(base_url=dd_url, version=DOCKER_API_MIN_VER)
     cont_1 = dockerClient.info()
     caas1 = cont_1['ContainersRunning']
     caas1 = int(caas1)
     #Check CaaS2
-    dd_url = "tcp://kick-ful-caas2:2375"
+    dd_url = "tcp://:2375"
     dockerClient = Client(base_url=dd_url, version=DOCKER_API_MIN_VER)
     cont_2 = dockerClient.info()
     caas2 = cont_2['ContainersRunning']
     caas2 = int(caas2)
     #CaaS3
-    dd_url = "tcp://kick-ful-caas3:2375"
+    dd_url = "tcp://:2375"
     dockerClient = Client(base_url=dd_url, version=DOCKER_API_MIN_VER)
     cont_3 = dockerClient.info()
     caas3 = cont_3['ContainersRunning']
     caas3 = int(caas3)
     #CaaS4
-    dd_url = "tcp://kick-ful-caas4:2375"
+    dd_url = "tcp://:2375"
     dockerClient = Client(base_url=dd_url, version=DOCKER_API_MIN_VER)
     cont_4 = dockerClient.info()
     caas4 = cont_4['ContainersRunning']
     caas4 = int(caas4)
     #Compare data and find CaaS with most resources and return it
-    dict_caas = {'kick-ful-caas1.cisco.com': caas1, 'kick-ful-caas2.cisco.com': caas2, 'kick-ful-caas3.cisco.com': caas3, 'kick-ful-caas4.cisco.com': caas4}
+    dict_caas = {'': caas1, '': caas2, '': caas3, '': caas4}
     dict_caas = sorted(dict_caas, key=dict_caas.get)
     return dict_caas[0]
 
